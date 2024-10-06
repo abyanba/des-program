@@ -127,7 +127,7 @@ import random
 
 def generate_random_key():
     # generating random strings
-    key = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+    key = ''.join(random.choices(string.hexdigits, k=16))
     return key
 
 def str_to_bin(user_input):
@@ -148,6 +148,14 @@ def str_to_bin(user_input):
 def binary_to_ascii(binary_str):
     ascii_str = ''.join([chr(int(binary_str[i:i+8], 2)) for i in range(0, len(binary_str), 8)])
     return ascii_str
+
+def binary_to_hex(binary_str):
+    hex_str = hex(int(binary_str, 2))[2:].zfill(16)
+    return hex_str
+
+def hex_to_binary(hex_str):
+    binary_str = bin(int(hex_str, 16))[2:].zfill(64)
+    return binary_str
 
 def ip_on_binary_rep(binary_representation):
     
@@ -268,7 +276,6 @@ def encryption(user_input, key):
 
         # Print or use the RPT for each round
 
-    print('\n')
     # At this point, 'lpt' and 'rpt' contain the final left and right halves after 16 rounds
 
     # After the final round, reverse the last swap
@@ -285,15 +292,17 @@ def encryption(user_input, key):
 
 
     # Convert binary cipher to ascii
-    final_cipher_ascii = binary_to_ascii(final_cipher_str)
-    print("Final Cipher text:", final_cipher_ascii)
+    # final_cipher_ascii = binary_to_ascii(final_cipher_str)
+    # print("Cipher Text (ASCII):", final_cipher_ascii)
+    final_cipher_hex = binary_to_hex(final_cipher_str)
+    print("Cipher Text (HEX):", final_cipher_hex)
     
-    return final_cipher_ascii
+    return final_cipher_hex
 
 # decryption of cipher to origional
 
-def decryption(final_cipher, key):
-    
+def decryption(final_cipher_hex, key):
+    final_cipher = hex_to_binary(final_cipher_hex)
     
     # Initialize lists to store round keys
     round_keys = generate_round_keys(key)
@@ -359,7 +368,6 @@ def decryption(final_cipher, key):
     
         # Print or use the RPT for each round
     
-    print('\n')
     final_result = rpt + lpt
     # Perform the final permutation (IP-1)
     final_cipher = [final_result[ip_inverse_table[i] - 1] for i in range(64)]
@@ -371,7 +379,7 @@ def decryption(final_cipher, key):
 
     # binary cipher string to ascii
     final_cipher_ascii = binary_to_ascii(final_cipher_str)
-    print("Decryption of Cipher :", final_cipher_ascii)
+    print("Decryption of Cipher (ASCII):", final_cipher_ascii)
 
     return final_cipher_ascii
 
@@ -386,23 +394,19 @@ while True:
         user_input = input("Enter a string (1-8char): ")
         
         random_key = generate_random_key()
-        print("Generated Key:", random_key)
-        
+        print("Generated Key (HEX):", random_key)
         enc = encryption(user_input, random_key)
-        cipher_to_binary = str_to_bin(enc)
-        dec2 = decryption(cipher_to_binary, random_key)
+        # cipher_to_binary = str_to_bin(enc)
+        # dec2 = decryption(cipher_to_binary, random_key)
         break
     
     elif choice == '2':
         # Decryption flow
-        cipher_text = input("Enter cipher text: ")
-        decrypt_key = input("Enter key: ")
-
-        # Convert Cipher text to binary for decryption
-        cipher_binary = str_to_bin(cipher_text)
+        cipher_text = input("Enter cipher text (HEX): ")
+        decrypt_key = input("Enter key (HEX): ")
 
         # Decryption
-        dec = decryption(cipher_binary, decrypt_key)
+        dec = decryption(cipher_text, decrypt_key)
         break
     
     else:
