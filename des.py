@@ -127,7 +127,7 @@ import random
 
 def generate_random_key():
     # generating random strings
-    key = ''.join(random.choices(string.hexdigits, k=16))
+    key = ''.join(random.choices(string.ascii_letters+string.digits+string.punctuation, k=16))
     return key
 
 def str_to_bin(user_input):
