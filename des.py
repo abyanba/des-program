@@ -396,16 +396,12 @@ while True:
         random_key = generate_random_key()
         print("Generated Key:", random_key)
         enc = encryption(user_input, random_key)
-        # cipher_to_binary = str_to_bin(enc)
-        # dec2 = decryption(cipher_to_binary, random_key)
         break
     
     elif choice == '2':
         # Decryption flow
         cipher_text = input("Enter cipher text (HEX): ")
         decrypt_key = input("Enter key: ")
-
-        # Decryption
         dec = decryption(cipher_text, decrypt_key)
         break
     
