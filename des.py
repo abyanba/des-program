@@ -394,7 +394,7 @@ while True:
         user_input = input("Enter a string (1-8char): ")
         
         random_key = generate_random_key()
-        print("Generated Key (HEX):", random_key)
+        print("Generated Key:", random_key)
         enc = encryption(user_input, random_key)
         # cipher_to_binary = str_to_bin(enc)
         # dec2 = decryption(cipher_to_binary, random_key)
@@ -403,7 +403,7 @@ while True:
     elif choice == '2':
         # Decryption flow
         cipher_text = input("Enter cipher text (HEX): ")
-        decrypt_key = input("Enter key (HEX): ")
+        decrypt_key = input("Enter key: ")
 
         # Decryption
         dec = decryption(cipher_text, decrypt_key)
