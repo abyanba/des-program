@@ -292,8 +292,8 @@ def encryption(user_input, key):
 
 
     # Convert binary cipher to ascii
-    # final_cipher_ascii = binary_to_ascii(final_cipher_str)
-    # print("Cipher Text (ASCII):", final_cipher_ascii)
+    final_cipher_ascii = binary_to_ascii(final_cipher_str)
+    print("Cipher Text (ASCII):", final_cipher_ascii)
     final_cipher_hex = binary_to_hex(final_cipher_str)
     print("Cipher Text (HEX):", final_cipher_hex)
     
