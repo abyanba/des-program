@@ -216,8 +216,6 @@ def encryption(user_input, key):
     lpt = ip_result_str[:32]
     rpt = ip_result_str[32:]
 
-
-
     # Assume 'rpt' is the 32-bit right half, 'lpt' is the 32-bit left half, and 'round_keys' is a list of 16 round keys
 
     for round_num in range(16):
@@ -293,9 +291,9 @@ def encryption(user_input, key):
 
     # Convert binary cipher to ascii
     final_cipher_ascii = binary_to_ascii(final_cipher_str)
-    print("Cipher Text (ASCII):", final_cipher_ascii)
+    # print("Cipher Text (ASCII):", final_cipher_ascii)
     final_cipher_hex = binary_to_hex(final_cipher_str)
-    print("Cipher Text (HEX):", final_cipher_hex)
+    # print("Cipher Text (HEX):", final_cipher_hex)
     
     return final_cipher_hex
 
@@ -379,9 +377,40 @@ def decryption(final_cipher_hex, key):
 
     # binary cipher string to ascii
     final_cipher_ascii = binary_to_ascii(final_cipher_str)
-    print("Decryption of Cipher (ASCII):", final_cipher_ascii)
+    # print("Decryption of Cipher (ASCII):", final_cipher_ascii)
 
     return final_cipher_ascii
+
+def pad_input(user_input):
+    # Padding input to make it a multiple of 8 bytes
+    while len(user_input) % 8 != 0:
+        user_input += ' '  # Using spaces for padding (you may choose another character)
+    return user_input
+
+def encryption_large_text(user_input, key):
+    # Padding the input if it's not a multiple of 8
+    user_input = pad_input(user_input)
+    
+    encrypted_text = ""
+    
+    # Process each 8-character block
+    for i in range(0, len(user_input), 8):
+        block = user_input[i:i+8]
+        encrypted_block = encryption(block, key)
+        encrypted_text += encrypted_block  # Append each encrypted block in HEX
+    
+    return encrypted_text
+
+def decryption_large_text(encrypted_text, key):
+    decrypted_text = ""
+    
+    # Process each 16-character hex block
+    for i in range(0, len(encrypted_text), 16):
+        block = encrypted_text[i:i+16]  # Each encrypted block is 16 hex characters (64 bits)
+        decrypted_block = decryption(block, key)
+        decrypted_text += decrypted_block
+    
+    return decrypted_text.strip()  # Strip padding spaces if any
 
 # Start
 while True:
@@ -391,18 +420,20 @@ while True:
     choice = input("Enter 1 or 2: ")
 
     if choice == '1':
-        user_input = input("Enter a string (1-8char): ")
+        user_input = input("Enter a string (any length): ")
         
         random_key = generate_random_key()
         print("Generated Key:", random_key)
-        enc = encryption(user_input, random_key)
+        encrypted_text = encryption_large_text(user_input, random_key)
+        print("Encrypted Text (HEX):", encrypted_text)
         break
     
     elif choice == '2':
         # Decryption flow
-        cipher_text = input("Enter cipher text (HEX): ")
+        encrypted_text = input("Enter encrypted text (HEX): ")
         decrypt_key = input("Enter key: ")
-        dec = decryption(cipher_text, decrypt_key)
+        decrypted_text = decryption_large_text(encrypted_text, decrypt_key)
+        print("Decrypted Text:", decrypted_text)
         break
     
     else:
